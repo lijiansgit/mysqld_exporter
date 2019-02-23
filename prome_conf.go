@@ -1,14 +1,15 @@
 package main
 
 import (
-	"github.com/prometheus/common/log"
-	"golang.org/x/exp/errors/fmt"
-	"strings"
+	"fmt"
 	"os"
+	"strings"
+
+	"github.com/prometheus/common/log"
 )
 
 const (
-	//CONFNAME="/data/app/prometheus/prometheus.yml"
+//CONFNAME="/data/app/prometheus/prometheus.yml"
 )
 
 func CreateFile() {
@@ -21,15 +22,15 @@ func CreateFile() {
 
 	var str string
 	str = "global:\n  scrape_interval: 10s\n  evaluation_interval: 10s\n  external_labels:\n"
-	str = str + "    monitor: 'qtt-thanos-prometheus-db'\n"
+	str = str + "    monitor: 'prometheus-aliyun-db'\n"
 	str = str + "alerting:\n  alertmanagers:\n  - static_configs:\n"
-	str = str + "    - targets: ['monitor-gecailong.qtt.com:9093']\n"
+	str = str + "    - targets: ['test.com:9093']\n"
 	str = str + "rule_files: ['rules/*.rules']\n"
 	str = str + "scrape_configs:\n  - job_name: 'prometheus'\n"
 	str = str + "    static_configs:\n"
 	str = str + fmt.Sprintf("    - targets: ['%s:9090']\n", strings.Split(*listenAddress, ":")[0])
 
-	_ , err = f.WriteString(str)
+	_, err = f.WriteString(str)
 	if err != nil {
 		log.Errorf("WriteFile err(%v)", err)
 	}
@@ -48,7 +49,7 @@ func WriteFile(name string) {
 	str = str + fmt.Sprintf("    metrics_path: '/metrics/%s'\n", name)
 	str = str + fmt.Sprintf("    static_configs:\n")
 	str = str + fmt.Sprintf("    - targets: ['%s']\n", *listenAddress)
-	_ , err = f.WriteString(str)
+	_, err = f.WriteString(str)
 	if err != nil {
 		log.Errorf("WriteFile err(%v)", err)
 	}

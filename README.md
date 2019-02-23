@@ -186,5 +186,9 @@ go get -u -v github.com/go-sql-driver/mysql
 go get -u -v github.com/prometheus
 go get -u -v gopkg.in/alecthomas/kingpin.v2
 go get -u -v gopkg.in/ini.v1
+mkdir $GOPATH/src/github.com/aliyun
+cd $GOPATH/src/github.com/aliyun
+git clone -v https://github.com/aliyun/alibaba-cloud-sdk-go.git
+
 go build
 ```

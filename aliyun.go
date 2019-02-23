@@ -1,18 +1,19 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/aliyun/alibaba-cloud-sdk-go/sdk/requests"
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/rds"
 	"github.com/prometheus/common/log"
-	"golang.org/x/exp/errors/fmt"
 )
 
 func GetRDS(page int) (total int, RDSList []rds.DBInstance, err error) {
 	// Create an ECS client
 	rdsClient, err := rds.NewClientWithAccessKey(
-		AliYunRegionID,             // Your Region ID
-		AliYunAccessKeyID,         // Your AccessKey ID
-		AliYunAccessKeySecret)     // Your AccessKey Secret
+		AliYunRegionID,        // Your Region ID
+		AliYunAccessKeyID,     // Your AccessKey ID
+		AliYunAccessKeySecret) // Your AccessKey Secret
 	if err != nil {
 		// Handle exceptions
 		return total, RDSList, err
@@ -28,13 +29,13 @@ func GetRDS(page int) (total int, RDSList []rds.DBInstance, err error) {
 		return total, RDSList, err
 	}
 
-	if ! response.IsSuccess() {
+	if !response.IsSuccess() {
 		return total, RDSList, fmt.Errorf("%s", response.String())
 	}
 
 	total = response.TotalRecordCount
 	RDSList = response.Items.DBInstance
-	return  total, RDSList, nil
+	return total, RDSList, nil
 }
 
 func GetRDSList() (l []string) {
@@ -43,14 +44,14 @@ func GetRDSList() (l []string) {
 		log.Errorf("GETRDS err(%v)", err)
 	}
 
-	totalPage := total / 30 + 1
-	for page := 1;page <= totalPage; page++ {
+	totalPage := total/30 + 1
+	for page := 1; page <= totalPage; page++ {
 		_, RDSList, err := GetRDS(page)
 		if err != nil {
 			log.Errorf("GETRDS err(%v)", err)
 		}
 
-		for _,v := range RDSList {
+		for _, v := range RDSList {
 			//name := fmt.Sprintf("%s:%s", v.ZoneId, v.DBInstanceId)
 			l = append(l, v.DBInstanceId)
 		}
